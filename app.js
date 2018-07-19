@@ -84,7 +84,7 @@ app.post('/bank/add',function(req, res){
 
 app.post('/file/add',function(req,res){
     session
-        .run('LOAD CSV WITH HEADERS FROM "https://cova14.github.io/txt/BANORTE_ASCEND.txt" AS row MATCH(b:Banco) CREATE(b)-[r:RETIRO{cantidad:row.Retiros}]->(n:Movimiento {cuenta:row.Cuenta, fechaOperacion:row.Fecha_de_Operacion, fecha:row.Fecha, referencia:row.Referencia, descripcion:row.Descripcion, codTransac:row.Cod_Transac, sucursal:row.Sucursal, saldo:row.Saldo, movimiento:row.Movimiento, descripcionDetallada:row.Descripcion_Detallada})-[re:DEPOSITO{cantidad:row.Depositos}]->(b)')
+        .run('LOAD CSV WITH HEADERS FROM "https://cova14.github.io/BankTest/files/BANORTE_ASCEND.txt" AS row MATCH(b:Banco) MERGE(b)-[r:RETIRO{cantidad:row.Retiros}]->(n:Movimiento {cuenta:row.Cuenta, fechaOperacion:row.Fecha_de_Operacion, fecha:row.Fecha, referencia:row.Referencia, descripcion:row.Descripcion, codTransac:row.Cod_Transac, sucursal:row.Sucursal, saldo:row.Saldo, movimiento:row.Movimiento, descripcionDetallada:row.Descripcion_Detallada})-[re:DEPOSITO{cantidad:row.Depositos}]->(b)')
         .then(function(result){
             res.redirect('/');
 
