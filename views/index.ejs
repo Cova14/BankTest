@@ -1,0 +1,27 @@
+<h3>Añadir Banco</h3>
+<form method="post" action="/bank/add">
+    <label>Nombre del banco</label> <br>
+    <input type="text" name="nombre">
+    <br>
+    <br> <br>
+    <input type="submit" value="Submit">
+</form>
+
+<h3>Bancos</h3>
+<ul>
+<% bancos.forEach(function(banco){ %>
+    <li><%= banco.nombre %></li>
+<% }) %>
+</ul>
+<br>
+<h3>Retiros</h3>
+<ul>
+<% retiros.forEach(function(retiro){ %>
+    <li><%= retiro.cantidad %></li>
+<% }) %>
+</ul>
+
+<br><br>
+<form method="post" action="/file/add">
+    <input type="submit" value="Importar">
+</form>
