@@ -39,26 +39,45 @@ app.get('/', function(req, res) {
             session
                 .run('MATCH(b:Banco)-[r:RETIRO]->(n) RETURN r ORDER BY r.cantidad')
                 .then(function(result){
-                var retirosArr = [];
-                result.records.forEach(function(record){
-                    retirosArr.push({
-                        id: record._fields[0].identity.low,
-                        cantidad: record._fields[0].properties.cantidad
-                    });
-                    var data = JSON.stringify(retirosArr);
-                    fs.writeFile('retiros.json', data, finished);
+                    var retirosArr = [];
+                    result.records.forEach(function(record){
+                        retirosArr.push({
+                            id: record._fields[0].identity.low,
+                            cantidad: record._fields[0].properties.cantidad
+                        });
+                        var data = JSON.stringify(retirosArr);
+                        fs.writeFile('retiros.json', data, finished);
 
-                    function finished(err){
-                    };
-                });
-                res.render('index', {
-                    bancos: bancoArr,
-                    retiros: retirosArr,
+                        function finished(err){
+                        };
+                    });
+                    session
+                        .run('MATCH(m:Movimiento) RETURN m')
+                        .then(function(result){
+                            var movPropArr = [];
+                            result.records.forEach(function(record){
+                                movPropArr.push({
+                                    properties: record._fields[0].properties
+                                });
+                                var data = JSON.stringify(movPropArr);
+                                fs.writeFile('movProps.json', data, finished);
+
+                                function finished (err){
+
+                                };
+                            });
+                        })
+                        res.render('index', {
+                            bancos: bancoArr,
+                            retiros: retirosArr,
+                        })
+                        .catch(function(err){
+                        console.log(err);
+                        });
                 })
-            })
-            .catch(function(err){
-                console.log(err);
-            });
+                .catch(function(err){
+                    console.log(err);
+                });
         })
         .catch(function(err){
             console.log(err);
