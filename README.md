@@ -13,6 +13,11 @@ The bad part is that there's no style, so please don't judge too much.
 3. "node app.js" to run the app (Did you notice you need node to use this?).
 4. Go to localhost:3000
 
+# Update
+Now there's a Json file with the properties of all the Movement nodes available.
+
+The code runs when the page load the first time and the Json file it's updated, just like the other ones.
+
 # IMPORTANT NOTES 
 The JSON files are only available on the repo directory, so you have to clone the repo necessarily.
 
