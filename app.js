@@ -1,3 +1,4 @@
+// Todo esto son librerías necesarias para que funcione
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
@@ -37,13 +38,16 @@ app.get('/', function(req, res) {
                     };
             });
             session
-                .run('MATCH(b:Banco)-[r:RETIRO]->(n) RETURN r ORDER BY r.cantidad')
+                .run('MATCH(b:Banco)-[r:RETIRO]->(n) RETURN r ORDER BY r.fecha, r.cantidad')
                 .then(function(result){
                     var retirosArr = [];
+                    var totalRetiros = 0;
                     result.records.forEach(function(record){
+                        totalRetiros += record._fields[0].properties.cantidad;
                         retirosArr.push({
                             id: record._fields[0].identity.low,
-                            cantidad: record._fields[0].properties.cantidad
+                            cantidad: record._fields[0].properties.cantidad,
+                            fecha: record._fields[0].properties.fecha
                         });
                         var data = JSON.stringify(retirosArr);
                         fs.writeFile('retiros.json', data, finished);
@@ -70,6 +74,7 @@ app.get('/', function(req, res) {
                         res.render('index', {
                             bancos: bancoArr,
                             retiros: retirosArr,
+                            totalRetiros: totalRetiros
                         })
                         .catch(function(err){
                         console.log(err);
@@ -103,7 +108,7 @@ app.post('/bank/add',function(req, res){
 
 app.post('/file/add',function(req,res){
     session
-        .run('LOAD CSV WITH HEADERS FROM "https://cova14.github.io/BankTest/files/BANORTE_ASCEND.txt" AS row MATCH(b:Banco) MERGE(b)-[r:RETIRO{cantidad:row.Retiros}]->(n:Movimiento {cuenta:row.Cuenta, fechaOperacion:row.Fecha_de_Operacion, fecha:row.Fecha, referencia:row.Referencia, descripcion:row.Descripcion, codTransac:row.Cod_Transac, sucursal:row.Sucursal, saldo:row.Saldo, movimiento:row.Movimiento, descripcionDetallada:row.Descripcion_Detallada})-[re:DEPOSITO{cantidad:row.Depositos}]->(b)')
+        .run('LOAD CSV WITH HEADERS FROM "https://cova14.github.io/BankTest/files/BANORTE_ASCEND.txt" AS row MATCH(b:Banco{nombre:"BANORTE"}) MERGE(b)-[r:RETIRO{cantidad:row.Retiros, fecha:row.Fecha_de_Operacion}]->(n:Movimiento {cuenta:row.Cuenta, fecha:row.Fecha, referencia:row.Referencia, descripcion:row.Descripcion, codTransac:row.Cod_Transac, sucursal:row.Sucursal, saldo:row.Saldo, movimiento:row.Movimiento, descripcionDetallada:row.Descripcion_Detallada})-[re:DEPOSITO{cantidad:row.Depositos, fecha:row.Fecha_de_Operacion}]->(b)')
         .then(function(result){
             res.redirect('/');
 

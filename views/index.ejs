@@ -15,11 +15,22 @@
 </ul>
 <br>
 <h3>Retiros</h3>
-<ul>
-<% retiros.forEach(function(retiro){ %>
-    <li><%= retiro.cantidad %></li>
-<% }) %>
-</ul>
+
+<table>
+    <tr>
+        <th>Retiros</th>
+        <th>Fecha</th>
+    </tr>
+    <% retiros.forEach(function(retiro){ %>
+        <tr>
+            <th>$<%= retiro.cantidad %></th>
+            <th><%= retiro.fecha %></th>
+        </tr>
+    <% }) %>
+</table>
+
+<h3>Retiros Totales</h3>
+    <h5><%= totalRetiros %></h5>
 
 <br><br>
 <form method="post" action="/file/add">
