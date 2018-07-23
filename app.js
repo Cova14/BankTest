@@ -156,9 +156,47 @@ app.post('/file/add',function(req,res){
     res.redirect('/');
 });
 
-app.get('/graphic',function(req,res){
-    res.sendFile(path.join(__dirname+'/views/graphic.html'));
-  });
+app.get('/graphic', function(req,res){
+    session
+        .run('MATCH(b:Banco)-[r:RETIRO{fecha:"01/03/2018"}]->(n) RETURN r')
+        .then(function(result){
+            var totalRetiros = 0;
+            var fecha = '';
+            result.records.forEach(function(record){
+                var retiro = record._fields[0].properties.cantidad;
+                retiro = retiro.replace(/,/g, "");
+                total = parseFloat(retiro);
+                totalRetiros += total;
+                fecha = record._fields[0].properties.fecha;
+            });
+            session
+                .run('MATCH(b:Banco)-[r:RETIRO{fecha:"02/03/2018"}]->(n) RETURN r')
+                .then(function(result){
+                    var totalRetiros1 = 0;
+                    var fecha1 = '';
+                    result.records.forEach(function(record){
+                        var retiro1 = record._fields[0].properties.cantidad;
+                        retiro1 = retiro1.replace(/,/g, "");
+                        total1 = parseFloat(retiro1);
+                        totalRetiros1 += total1;
+                        fecha1 = record._fields[0].properties.fecha;
+                    });
+                    res.render('graphic', {
+                        total: totalRetiros.toFixed(2),
+                        fecha: fecha.split('/').reverse().join(', '),
+                        total1: totalRetiros1.toFixed(2),
+                        fecha1: fecha1.split('/').reverse().join(', ')
+    
+                    })
+                })
+                .catch(function(err){
+                    console.log(err);
+                });
+        })
+        .catch(function(err){
+            console.log(err);
+        });
+});
 
 app.listen(3000);
 console.log('Server started on port 3000')
