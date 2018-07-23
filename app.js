@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended: false}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-var driver = neo4j.driver('bolt://54.236.48.119:32819', neo4j.auth.basic('neo4j', 'pitch-housefall-deduction'));
+var driver = neo4j.driver('bolt://34.239.207.52:32955', neo4j.auth.basic('neo4j', 'polish-splicers-rifles'));
 var session = driver.session();
 
 app.get('/', function(req, res) {
@@ -38,12 +38,17 @@ app.get('/', function(req, res) {
                     };
             });
             session
-                .run('MATCH(b:Banco)-[r:RETIRO]->(n) RETURN r ORDER BY r.fecha, r.cantidad')
+                .run('MATCH(b:Banco)-[r:RETIRO{fecha:"01/03/2018"}]->(n) RETURN r ORDER BY r.cantidad')
                 .then(function(result){
                     var retirosArr = [];
                     var totalRetiros = 0;
+                    var fecha = '';
                     result.records.forEach(function(record){
-                        totalRetiros += record._fields[0].properties.cantidad;
+                        var retiro = record._fields[0].properties.cantidad;
+                        retiro = retiro.replace(/,/g, "");
+                        total = parseFloat(retiro);
+                        totalRetiros += total;
+                        fecha = record._fields[0].properties.fecha;
                         retirosArr.push({
                             id: record._fields[0].identity.low,
                             cantidad: record._fields[0].properties.cantidad,
@@ -56,29 +61,60 @@ app.get('/', function(req, res) {
                         };
                     });
                     session
-                        .run('MATCH(m:Movimiento) RETURN m')
+                        .run('MATCH(b:Banco)-[r:RETIRO{fecha:"02/03/2018"}]->(n) RETURN r ORDER BY r.cantidad')
                         .then(function(result){
-                            var movPropArr = [];
+                            var retirosArr1 = [];
+                            var totalRetiros1 = 0;
+                            var fecha1 = '';
                             result.records.forEach(function(record){
-                                movPropArr.push({
-                                    properties: record._fields[0].properties
+                                var retiro1 = record._fields[0].properties.cantidad;
+                                retiro1 = retiro1.replace(/,/g, "");
+                                total1 = parseFloat(retiro1);
+                                totalRetiros1 += total1;
+                                fecha1 = record._fields[0].properties.fecha;
+                                retirosArr1.push({
+                                    id: record._fields[0].identity.low,
+                                    cantidad: record._fields[0].properties.cantidad,
+                                    fecha: record._fields[0].properties.fecha
                                 });
-                                var data = JSON.stringify(movPropArr);
-                                fs.writeFile('movProps.json', data, finished);
+                                var data = JSON.stringify(retirosArr1);
+                                fs.writeFile('retiros1.json', data, finished);
 
-                                function finished (err){
-
+                                function finished(err){
                                 };
                             });
-                        })
-                        res.render('index', {
-                            bancos: bancoArr,
-                            retiros: retirosArr,
-                            totalRetiros: totalRetiros
+                            session
+                                .run('MATCH(m:Movimiento) RETURN m')
+                                .then(function(result){
+                                    var movPropArr = [];
+                                    result.records.forEach(function(record){
+                                        movPropArr.push({
+                                            properties: record._fields[0].properties
+                                        });
+                                        var data = JSON.stringify(movPropArr);
+                                        fs.writeFile('movProps.json', data, finished);
+
+                                        function finished (err){
+
+                                        };
+                                    });
+                                })
+                                res.render('index', {
+                                    bancos: bancoArr,
+                                    retiros: retirosArr,
+                                    totalRetiros: totalRetiros.toFixed(2),
+                                    fecha: fecha,
+                                    retiros1: retirosArr1,
+                                    totalRetiros1: totalRetiros1.toFixed(2),
+                                    fecha1: fecha1,
+                                })
+                                .catch(function(err){
+                                console.log(err);
+                                });
                         })
                         .catch(function(err){
-                        console.log(err);
-                        });
+                            console.log(err)
+                        });   
                 })
                 .catch(function(err){
                     console.log(err);
@@ -108,7 +144,7 @@ app.post('/bank/add',function(req, res){
 
 app.post('/file/add',function(req,res){
     session
-        .run('LOAD CSV WITH HEADERS FROM "https://cova14.github.io/BankTest/files/BANORTE_ASCEND.txt" AS row MATCH(b:Banco{nombre:"BANORTE"}) MERGE(b)-[r:RETIRO{cantidad:row.Retiros, fecha:row.Fecha_de_Operacion}]->(n:Movimiento {cuenta:row.Cuenta, fecha:row.Fecha, referencia:row.Referencia, descripcion:row.Descripcion, codTransac:row.Cod_Transac, sucursal:row.Sucursal, saldo:row.Saldo, movimiento:row.Movimiento, descripcionDetallada:row.Descripcion_Detallada})-[re:DEPOSITO{cantidad:row.Depositos, fecha:row.Fecha_de_Operacion}]->(b)')
+        .run('LOAD CSV WITH HEADERS FROM "https://cova14.github.io/BankTest/files/BANORTE_ASCEND.txt" AS row MATCH(b:Banco{nombre:"BANORTE"}) CREATE(b)-[r:RETIRO{cantidad:row.Retiros, fecha:row.Fecha_de_Operacion}]->(n:Movimiento {cuenta:row.Cuenta, fecha:row.Fecha, referencia:row.Referencia, descripcion:row.Descripcion, codTransac:row.Cod_Transac, sucursal:row.Sucursal, saldo:row.Saldo, movimiento:row.Movimiento, descripcionDetallada:row.Descripcion_Detallada})-[re:DEPOSITO{cantidad:row.Depositos, fecha:row.Fecha_de_Operacion}]->(b)')
         .then(function(result){
             res.redirect('/');
 
@@ -120,6 +156,9 @@ app.post('/file/add',function(req,res){
     res.redirect('/');
 });
 
+app.get('/graphic',function(req,res){
+    res.sendFile(path.join(__dirname+'/views/graphic.html'));
+  });
 
 app.listen(3000);
 console.log('Server started on port 3000')
