@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+<head> 
+<script>
+    window.onload = function () {
+    
+        var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+            zoomEnabled: true,
+            title:{
+                text: "Retiros de Bancomer"
+            },
+            axisX: {
+                intervalType: "day",
+                interval: 1,
+                title:"Fecha",
+                valueFormatString: "DD-MMM-YY" ,
+                labelAngle: -50
+            },
+            axisY:{
+                title: "Cantidad",
+                valueFormatString: "$###,###.##"
+            },
+            data: [{
+                type: "scatter",
+                toolTipContent: "<b>Price: </b>${y}",
+                dataPoints: [
+                    { x: new Date(2018, 02, 01), y: 833553.23},
+                    { x: new Date(2018, 02, 02), y: 142298.11}
+                ]
+        }]
+    });
+    chart.render();
+    
+    }
+</script>
+</head>
+<body>
+<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+
+<a href="/">Inicio</a>
+</body>
+</html>
