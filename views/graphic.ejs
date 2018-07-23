@@ -2,6 +2,11 @@
 <html>
 <head> 
 <script>
+    var fecha = new Date(<%= fecha %>);
+    var fechaGraph = fecha.setMonth(fecha.getMonth()-1)
+    var fecha1 = new Date(<%= fecha1 %>);
+    var fechaGraph1 = fecha1.setMonth(fecha.getMonth());
+
     window.onload = function () {
     
         var chart = new CanvasJS.Chart("chartContainer", {
@@ -25,8 +30,8 @@
                 type: "scatter",
                 toolTipContent: "<b>Price: </b>${y}",
                 dataPoints: [
-                    { x: new Date(2018, 02, 01), y: 833553.23},
-                    { x: new Date(2018, 02, 02), y: 142298.11}
+                    { x: new Date(fechaGraph), y: <%= total %>},
+                    { x: new Date(fechaGraph1), y: <%= total1 %>}
                 ]
         }]
     });
