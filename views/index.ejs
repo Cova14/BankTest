@@ -27,10 +27,19 @@
             <th><%= retiro.fecha %></th>
         </tr>
     <% }) %>
+    <% retiros1.forEach(function(retiro1){ %>
+        <tr>
+            <th>$<%= retiro1.cantidad %></th>
+            <th><%= retiro1.fecha %></th>
+        </tr>
+    <% }) %>
 </table>
 
 <h3>Retiros Totales</h3>
-    <h5><%= totalRetiros %></h5>
+<h4><%= totalRetiros %> del día <%= fecha %></h4>
+<h4><%= totalRetiros1 %> del día <%= fecha1 %></h4>
+
+<a href="/graphic">Gráfica</a>
 
 <br><br>
 <form method="post" action="/file/add">
