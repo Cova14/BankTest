@@ -39,7 +39,7 @@ In this project we're using the Neo4j Sandbox (Documentation above). This provid
 
 So, if the previous db expired or maybe you want to use your own db just go to the [Neo4j Sandbox](https://neo4j.com/sandbox-v2/) and create a new Sandbox
 
-Then go to Code and select JS. Once there you'll find something like this: 
+Then go to the Code tab and select JS. Once there you'll find something like this: 
 
 `var driver = neo4j.driver('bolt://34.239.207.52:32955', neo4j.auth.basic('neo4j', 'polish-splicers-rifles'));`
 
