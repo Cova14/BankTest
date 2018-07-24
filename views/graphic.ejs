@@ -2,11 +2,16 @@
 <html>
 <head> 
 <script>
-    var fecha = new Date(<%= fecha %>);
-    var fechaGraph = fecha.setMonth(fecha.getMonth()-1)
-    var fecha1 = new Date(<%= fecha1 %>);
+    // The sintax error is 'cause we're using ejs inside a script tag
+
+    // The graph library we're using takes months from 00 to 11, instead of 01 to 12
+    // So we need to do some magic
+    var fecha = new Date(<%= fecha %>); // We pass the date with ejs and use new Date to create a "Date"
+    var fechaGraph = fecha.setMonth(fecha.getMonth()-1) // then we get the date we created, get the month and decrease 1
+    var fecha1 = new Date(<%= fecha1 %>); // Same here but with the other date
     var fechaGraph1 = fecha1.setMonth(fecha.getMonth());
 
+    // This is code for the graph, you can read about it in "https://canvasjs.com/"
     window.onload = function () {
     
         var chart = new CanvasJS.Chart("chartContainer", {
@@ -30,7 +35,7 @@
                 type: "scatter",
                 toolTipContent: "<b>Price: </b>${y}",
                 dataPoints: [
-                    { x: new Date(fechaGraph), y: <%= total %>},
+                    { x: new Date(fechaGraph), y: <%= total %>}, 
                     { x: new Date(fechaGraph1), y: <%= total1 %>}
                 ]
         }]
@@ -45,6 +50,6 @@
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
 
-<a href="/">Inicio</a>
+<a href="/">Inicio</a> <!-- A link to the home page -->
 </body>
 </html>

@@ -1,5 +1,7 @@
+<!-- We're using EJS, for more info check this page http://www.embeddedjs.com/ -->
+
 <h3>Añadir Banco</h3>
-<form method="post" action="/bank/add">
+<form method="post" action="/bank/add"> <!-- We post the data into /bank/add to use it in the app.js(line 149) -->
     <label>Nombre del banco</label> <br>
     <input type="text" name="nombre">
     <br>
@@ -9,7 +11,7 @@
 
 <h3>Bancos</h3>
 <ul>
-<% bancos.forEach(function(banco){ %>
+<% bancos.forEach(function(banco){ %> <!-- Here we use ejs. "bancos" it's the name we gave to the array in app.js(line 122) -->
     <li><%= banco.nombre %></li>
 <% }) %>
 </ul>
@@ -21,7 +23,7 @@
         <th>Retiros</th>
         <th>Fecha</th>
     </tr>
-    <% retiros.forEach(function(retiro){ %>
+    <% retiros.forEach(function(retiro){ %> <!-- The same we did for "bancos" -->
         <tr>
             <th>$<%= retiro.cantidad %></th>
             <th><%= retiro.fecha %></th>
