@@ -1,30 +1,52 @@
 # BankTest
 
-So... This is a test to see if I use only javascript to do what I did on the Neo4j Desktop app.
+This project it's a Test to see if I can work with Neo4j only using JS code.
 
+Still just a test, I work with only one document
 
-Spoiler: I DID IT.
+The goal it's making a page where you can import your own files and see the data you want(Movements, Banks, accounts)
 
-The bad part is that there's no style, so please don't judge too much.
+Some help would be great!
 
-# How to use
-1. Clone the repo.
-2. "npm install" in your terminal.
-3. "node app.js" to run the app (Did you notice you need node to use this?).
-4. Go to localhost:3000
+# Before you start
+You'll need some pieces for this. Node it's one.
 
-# Update
-Now there's a Json file with the properties of all the Movement nodes available.
+Here you can [download Node.js](https://nodejs.org/en/ "Node.js")
 
-The code runs when the page load the first time and the Json file it's updated, just like the other ones.
+I recommend reading some documentation:
 
-# IMPORTANT NOTES 
-The JSON files are only available on the repo directory, so you have to clone the repo necessarily.
+[Neo4j Sandbox](https://neo4j.com/sandbox-v2/)
 
-You can add more banks, but there's no code to add relationships or anything else to those banks... Yet
+[Cypher language](https://neo4j.com/developer/cypher/)
 
-The "Importar" button only takes the info from the .txt file in the files directory. The code was created specifically for that file and (hopefully) won't create duplicate values(The nodes are already created)
+[Canvas JS (Scatter dashboard)](https://canvasjs.com/html5-javascript-scatter-point-chart/)
 
-I hope I can make a page where you can see some data, download the JSON files, import your own files, etc.(**send help**)
+[EJS](http://www.embeddedjs.com/ "Embedded JavaScript Templates")
 
-**_ONLY GOD KNOWS HOW THIS CODE WORKS_** (And you too, probably. Not too complex)
+# Let's Start
+
+Once you have Node.js installed you'll have a Node.js command prompt
+
+1. Clone the repo. You can do it with `git clone https://github.com/Cova14/BankTest.git` in your command prompt. Github Desktop works too.
+2. On the cmd go to your cloned directory `cd Documents\my_cloned_dir`.
+3. Then `npm install`, this will install all the libraries we need. This libraries are in the package.json file.
+4. If everything it's okay go to localhost:3000
+
+# It doesn't work?
+What annoying, right? Don't worry.
+
+In this project we're using the Neo4j Sandbox (Documentation above). This provide a temporal db to use (2/3 days), you can Expand it, but only for 7 days.
+
+So, if the previous db expired or maybe you want to use your own db just go to the [Neo4j Sandbox](https://neo4j.com/sandbox-v2/) and create a new Sandbox
+
+Then go to Code and select JS. Once there you'll find something like this: 
+
+`var driver = neo4j.driver('bolt://34.239.207.52:32955', neo4j.auth.basic('neo4j', 'polish-splicers-rifles'));`
+
+Copy that (not this one, the one in the sandbox) and replace it in the app.js file
+
+Try again!
+
+# Any issue?
+
+Feel free to let me know if there´s something wrong
